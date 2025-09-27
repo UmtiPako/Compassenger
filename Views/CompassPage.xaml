@@ -1,0 +1,40 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Compassenger.Views.CompassPage"
+             BackgroundColor="Black">
+
+    <VerticalStackLayout Spacing="20" Padding="15">
+
+        <Frame BackgroundColor="Yellow" CornerRadius="10" Padding="15" Margin="0,50,0,0">
+            <Label Text="⚠️ GÖSTERİLEN UZAKLIK KUŞ UÇUŞU MESAFEDİR. KUŞ DEĞİLSENİZ O UZAKLIĞA GÖRE İŞ YAPMAYINIZ!"
+                   TextColor="Red"
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"/>
+        </Frame>
+
+        <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Image x:Name="_arrow"
+                   Source="arrow.png"
+                   WidthRequest="250"
+                   HeightRequest="250"
+                   Grid.Row="0"
+                   Margin="0,20,0,0"/>
+
+            <Label x:Name="_distance"
+                   Text="0 m"
+                   FontSize="40"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   Grid.Row="1"
+                   Margin="0,15,0,0"/>
+        </Grid>
+
+    </VerticalStackLayout>
+</ContentPage>
