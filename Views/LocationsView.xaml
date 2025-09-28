@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Compassenger.Views.LocationsView"
+             Title="LOKASYONLARIM">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Başlık -->
+        <Frame Grid.Row="0" 
+               BackgroundColor="#4CAF50" 
+               Padding="15,10" 
+               Margin="10,10,10,5"
+               CornerRadius="8"
+               HasShadow="True">
+            <Label Text="Kayıtlı Lokasyonlarım"
+                   TextColor="White"
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center" />
+        </Frame>
+
+        <!-- Lokasyon Listesi -->
+        <ScrollView Grid.Row="1" Margin="10,5">
+            <StackLayout x:Name="LocationsStackLayout" Spacing="10">
+
+                <!-- Örnek Lokasyon Kartları -->
+                <Frame BackgroundColor="White" 
+                       Padding="15" 
+                       CornerRadius="8"
+                       HasShadow="True">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackLayout Grid.Column="0">
+                            <Label Text="Ev" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#333" />
+                            <Label Text="39.9334, 32.8597" 
+                                   FontSize="14" 
+                                   TextColor="#666" />
+                            <Label Text="Ankara, Türkiye" 
+                                   FontSize="12" 
+                                   TextColor="#999" />
+                        </StackLayout>
+
+                        <Button Grid.Column="1"
+                                Text="➤"
+                                FontSize="20"
+                                BackgroundColor="#2196F3"
+                                TextColor="White"
+                                WidthRequest="50"
+                                HeightRequest="50"
+                                CornerRadius="25"
+                                Clicked="OnNavigateToLocationClicked" />
+                    </Grid>
+                </Frame>
+
+                <Frame BackgroundColor="White" 
+                       Padding="15" 
+                       CornerRadius="8"
+                       HasShadow="True">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackLayout Grid.Column="0">
+                            <Label Text="İş Yeri" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#333" />
+                            <Label Text="39.9208, 32.8541" 
+                                   FontSize="14" 
+                                   TextColor="#666" />
+                            <Label Text="Kızılay, Ankara" 
+                                   FontSize="12" 
+                                   TextColor="#999" />
+                        </StackLayout>
+
+                        <Button Grid.Column="1"
+                                Text="➤"
+                                FontSize="20"
+                                BackgroundColor="#2196F3"
+                                TextColor="White"
+                                WidthRequest="50"
+                                HeightRequest="50"
+                                CornerRadius="25"
+                                Clicked="OnNavigateToLocationClicked" />
+                    </Grid>
+                </Frame>
+
+                <!-- Henüz lokasyon yoksa gösterilecek mesaj -->
+                <Frame x:Name="EmptyStateFrame"
+                       BackgroundColor="#F5F5F5" 
+                       Padding="20" 
+                       CornerRadius="8"
+                       HasShadow="False"
+                       IsVisible="False">
+                    <StackLayout HorizontalOptions="Center">
+                        <Label Text="📍" 
+                               FontSize="48" 
+                               HorizontalOptions="Center" />
+                        <Label Text="Henüz kayıtlı lokasyon yok" 
+                               FontSize="16" 
+                               TextColor="#666"
+                               HorizontalOptions="Center" />
+                        <Label Text="Harita sekmesinden lokasyon ekleyebilirsiniz" 
+                               FontSize="14" 
+                               TextColor="#999"
+                               HorizontalOptions="Center" />
+                    </StackLayout>
+                </Frame>
+
+            </StackLayout>
+        </ScrollView>
+
+        <!-- Alt Buton -->
+        <Button Grid.Row="2"
+                x:Name="AddLocationButton"
+                Text="+ Yeni Lokasyon Ekle"
+                BackgroundColor="#4CAF50"
+                TextColor="White"
+                FontSize="16"
+                FontAttributes="Bold"
+                Margin="10"
+                Padding="15"
+                CornerRadius="8"
+                Clicked="OnAddLocationClicked" />
+    </Grid>
+
+</ContentPage>

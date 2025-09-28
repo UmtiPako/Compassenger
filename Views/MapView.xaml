@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
+             x:Class="Compassenger.Views.MapView"
+             Title="HARİTA">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Üst Bilgi Mesajı -->
+        <Frame Grid.Row="0" 
+               BackgroundColor="#2196F3" 
+               Padding="15,10" 
+               Margin="10,10,10,5"
+               CornerRadius="8"
+               HasShadow="True">
+            <Label Text="Başlamak İçin Haritadan Nokta Seçiniz"
+                   TextColor="White"
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center" />
+        </Frame>
+
+        <!-- Mapsui Harita Kontrolü -->
+        <Frame Grid.Row="1" 
+               Margin="10,5,10,10"
+               Padding="0"
+               CornerRadius="12"
+               HasShadow="True"
+               BackgroundColor="White">
+            <Grid>
+                <mapsui:MapView x:Name="MV"
+                                   VerticalOptions="FillAndExpand"
+                                   HorizontalOptions="FillAndExpand" />
+
+                <!-- Anlık Pozisyon Butonu -->
+                <Button x:Name="GetLocationButton"
+                        Text="📍 Anlık Pozisyonu Al"
+                        BackgroundColor="#FF5722"
+                        TextColor="White"
+                        FontSize="14"
+                        FontAttributes="Bold"
+                        WidthRequest="160"
+                        HeightRequest="45"
+                        CornerRadius="22"
+                        HorizontalOptions="End"
+                        VerticalOptions="Start"
+                        Margin="15"
+                        Clicked="OnGetLocationClicked" />
+            </Grid>
+        </Frame>
+    
+    </Grid>
+
+</ContentPage>

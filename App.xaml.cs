@@ -20,7 +20,7 @@ namespace Compassenger
                 Longitude = 32.836911
             };
 
-            MainPage = new CompassPage(compass, location, waypoint);
+            MainPage = new MainPage();
         }
     }
 }

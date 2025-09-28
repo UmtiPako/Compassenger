@@ -1,5 +1,6 @@
 ﻿using Compassenger.Services;
 using Microsoft.Extensions.Logging;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace Compassenger
 {
@@ -15,6 +16,15 @@ namespace Compassenger
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+
+            builder
+                .UseMauiApp<App>()
+                .UseSkiaSharp(true)
+                .ConfigureFonts(fonts =>
+                {
+                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                }); ;
 
             builder.Services.AddSingleton<CompassService>();
             builder.Services.AddSingleton<LocationService>();
