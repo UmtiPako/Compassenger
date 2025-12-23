@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Compassenger.Models"
              x:Class="Compassenger.Views.LocationsView"
              Title="LOKASYONLARIM">
 
@@ -8,7 +9,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- Başlık -->
@@ -27,88 +27,19 @@
         </Frame>
 
         <!-- Lokasyon Listesi -->
-        <ScrollView Grid.Row="1" Margin="10,5">
-            <StackLayout x:Name="LocationsStackLayout" Spacing="10">
-
-                <!-- Örnek Lokasyon Kartları -->
-                <Frame BackgroundColor="White" 
-                       Padding="15" 
-                       CornerRadius="8"
-                       HasShadow="True">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <StackLayout Grid.Column="0">
-                            <Label Text="Ev" 
-                                   FontSize="18" 
-                                   FontAttributes="Bold" 
-                                   TextColor="#333" />
-                            <Label Text="39.9334, 32.8597" 
-                                   FontSize="14" 
-                                   TextColor="#666" />
-                            <Label Text="Ankara, Türkiye" 
-                                   FontSize="12" 
-                                   TextColor="#999" />
-                        </StackLayout>
-
-                        <Button Grid.Column="1"
-                                Text="➤"
-                                FontSize="20"
-                                BackgroundColor="#2196F3"
-                                TextColor="White"
-                                WidthRequest="50"
-                                HeightRequest="50"
-                                CornerRadius="25"
-                                Clicked="OnNavigateToLocationClicked" />
-                    </Grid>
-                </Frame>
-
-                <Frame BackgroundColor="White" 
-                       Padding="15" 
-                       CornerRadius="8"
-                       HasShadow="True">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <StackLayout Grid.Column="0">
-                            <Label Text="İş Yeri" 
-                                   FontSize="18" 
-                                   FontAttributes="Bold" 
-                                   TextColor="#333" />
-                            <Label Text="39.9208, 32.8541" 
-                                   FontSize="14" 
-                                   TextColor="#666" />
-                            <Label Text="Kızılay, Ankara" 
-                                   FontSize="12" 
-                                   TextColor="#999" />
-                        </StackLayout>
-
-                        <Button Grid.Column="1"
-                                Text="➤"
-                                FontSize="20"
-                                BackgroundColor="#2196F3"
-                                TextColor="White"
-                                WidthRequest="50"
-                                HeightRequest="50"
-                                CornerRadius="25"
-                                Clicked="OnNavigateToLocationClicked" />
-                    </Grid>
-                </Frame>
-
-                <!-- Henüz lokasyon yoksa gösterilecek mesaj -->
-                <Frame x:Name="EmptyStateFrame"
-                       BackgroundColor="#F5F5F5" 
-                       Padding="20" 
-                       CornerRadius="8"
-                       HasShadow="False"
-                       IsVisible="False">
-                    <StackLayout HorizontalOptions="Center">
+        <RefreshView Grid.Row="1" x:Name="LocationsRefreshView" Refreshing="OnRefreshing">
+            <CollectionView x:Name="LocationsCollection" 
+                            SelectionMode="None" 
+                            Margin="10,5"
+                            RemainingItemsThreshold="5"
+                            RemainingItemsThresholdReached="OnRemainingItemsThresholdReached">
+                <CollectionView.Footer>
+                    <StackLayout x:Name="LoadingFooter" IsVisible="False" Padding="10">
+                        <ActivityIndicator IsRunning="True" Color="#4CAF50" HorizontalOptions="Center" />
+                    </StackLayout>
+                </CollectionView.Footer>
+                <CollectionView.EmptyView>
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
                         <Label Text="📍" 
                                FontSize="48" 
                                HorizontalOptions="Center" />
@@ -116,28 +47,88 @@
                                FontSize="16" 
                                TextColor="#666"
                                HorizontalOptions="Center" />
-                        <Label Text="Harita sekmesinden lokasyon ekleyebilirsiniz" 
-                               FontSize="14" 
-                               TextColor="#999"
-                               HorizontalOptions="Center" />
                     </StackLayout>
-                </Frame>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Waypoint">
+                        <Grid Padding="5" Margin="0,0,0,12">
+                            <Border StrokeShape="RoundRectangle 15"
+                                    StrokeThickness="0"
+                                    BackgroundColor="White"
+                                    HeightRequest="100">
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,4" Radius="8" Opacity="0.1" />
+                                </Border.Shadow>
+                                
+                                <Grid ColumnDefinitions="12,*,Auto,Auto,Auto" Padding="0,0,10,0">
+                                    <!-- Left Color Strip -->
+                                    <BoxView Grid.Column="0" Color="#4CAF50"/>
+                                    
+                                    <!-- Content -->
+                                    <StackLayout Grid.Column="1" VerticalOptions="Center" Padding="15,0,0,0" Spacing="4">
+                                        <Label Text="{Binding Name}" 
+                                               FontSize="18" 
+                                               FontAttributes="Bold" 
+                                               TextColor="#333333" 
+                                               LineBreakMode="TailTruncation" />
+                                        
+                                        <HorizontalStackLayout Spacing="10">
+                                            <Label Text="{Binding Latitude, StringFormat='Lat: {0:F4}'}" 
+                                                   FontSize="12" 
+                                                   TextColor="#757575" />
+                                            <Label Text="|" TextColor="#DDDDDD"/>
+                                            <Label Text="{Binding Longitude, StringFormat='Lon: {0:F4}'}" 
+                                                   FontSize="12" 
+                                                   TextColor="#757575" />
+                                        </HorizontalStackLayout>
+                                    </StackLayout>
 
-            </StackLayout>
-        </ScrollView>
+                                    <!-- Share Action -->
+                                    <ImageButton Grid.Column="2"
+                                                 Source="share.png"
+                                                 BackgroundColor="Transparent"
+                                                 WidthRequest="40"
+                                                 HeightRequest="40"
+                                                 VerticalOptions="Center"
+                                                 Clicked="OnShareClicked"
+                                                 CommandParameter="{Binding .}"
+                                                 Margin="0,0,5,0"
+                                                 Padding="8"/>
 
-        <!-- Alt Buton -->
-        <Button Grid.Row="2"
-                x:Name="AddLocationButton"
-                Text="+ Yeni Lokasyon Ekle"
-                BackgroundColor="#4CAF50"
-                TextColor="White"
-                FontSize="16"
-                FontAttributes="Bold"
-                Margin="10"
-                Padding="15"
-                CornerRadius="8"
-                Clicked="OnAddLocationClicked" />
+                                    <!-- Delete Action -->
+                                    <ImageButton Grid.Column="3"
+                                                 Source="delete.png"
+                                                 BackgroundColor="Transparent"
+                                                 WidthRequest="40"
+                                                 HeightRequest="40"
+                                                 VerticalOptions="Center"
+                                                 Clicked="OnDeleteClicked"
+                                                 CommandParameter="{Binding .}"
+                                                 Margin="0,0,5,0"
+                                                 Padding="8"/>
+
+                                    <!-- Go Action -->
+                                    <Button Grid.Column="4"
+                                            Text="➤"
+                                            FontSize="18"
+                                            FontAttributes="Bold"
+                                            BackgroundColor="#E8F5E9"
+                                            TextColor="#2E7D32"
+                                            WidthRequest="50"
+                                            HeightRequest="50"
+                                            CornerRadius="25"
+                                            VerticalOptions="Center"
+                                            Clicked="OnNavigateToLocationClicked" 
+                                            CommandParameter="{Binding .}"
+                                            Margin="5,0,5,0"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
     </Grid>
 
 </ContentPage>

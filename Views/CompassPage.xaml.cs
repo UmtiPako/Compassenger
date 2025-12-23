@@ -1,6 +1,5 @@
 using Compassenger.Models;
 using Compassenger.Services;
-using System.Threading.Tasks;
 
 namespace Compassenger.Views;
 
@@ -8,30 +7,34 @@ public partial class CompassPage : ContentPage
 {
     private readonly CompassService _compass;
     private readonly LocationService _locationService;
-
-    private readonly Waypoint _waypoint;
-
     private readonly SimpleKalmanFilter _compassFilter;
+    private CancellationTokenSource cts;
 
+    private Waypoint _waypoint;
     private double? _currentLat;
     private double? _currentLon;
     private double distanceToTargetInMeters;
 
-    private CancellationTokenSource cts;
-
-    public CompassPage(CompassService compass, LocationService locationService, Waypoint waypoint)
+    public CompassPage(CompassService compass, LocationService locationService)
     {
         InitializeComponent();
         _compass = compass;
         _locationService = locationService;
-
+        _compassFilter = new SimpleKalmanFilter(0.0);
         cts = new CancellationTokenSource();
 
-        _waypoint = waypoint;
-
-        _compassFilter = new SimpleKalmanFilter(0.0);
+        _waypoint = NavigationData.CurrentWaypoint;
+        if (_waypoint != null)
+        {
+             _targetName.Text = _waypoint.Name ?? "Hedef Noktası";
+        }
 
         _compass.HeadingChanged += OnHeadingChanged;
+    }
+
+    private async void OnCloseClicked(object sender, EventArgs e)
+    {
+        await Navigation.PopModalAsync();
     }
 
     protected override async void OnAppearing()
@@ -70,11 +73,9 @@ public partial class CompassPage : ContentPage
         _compass.HeadingChanged -= OnHeadingChanged;
     }
 
-
     private async void OnHeadingChanged(object sender, double heading)
     {
         var filteredHeading = _compassFilter.Filter(heading);
-
         await UpdateArrow(filteredHeading);
     }
 
@@ -104,7 +105,7 @@ public partial class CompassPage : ContentPage
 
     private void CalculateDistance()
     {
-        if (_currentLat == null || _currentLon == null)
+        if (_currentLat == null || _currentLon == null || _waypoint == null)
             return;
 
         var distanceToTargetInKms = Location.CalculateDistance(
@@ -127,7 +128,7 @@ public partial class CompassPage : ContentPage
 
     private async Task UpdateArrow(double deviceHeads)
     {
-        if (_currentLat == null || _currentLon == null)
+        if (_currentLat == null || _currentLon == null || _waypoint == null)
             return;
 
         var current = new Location(_currentLat.Value, _currentLon.Value);

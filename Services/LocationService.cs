@@ -12,8 +12,30 @@ namespace Compassenger.Services
 
         public async Task<Location> GetCurrentUserLocationAsync()
         {
-            var request = new GeolocationRequest(GeolocationAccuracy.Best, TimeSpan.FromSeconds(10));
-            return await Geolocation.GetLocationAsync(request);
+            try
+            {
+                // 1. Onceki bilinen konumu kontrol et (Hizli)
+                var lastKnownLocation = await Geolocation.GetLastKnownLocationAsync();
+
+                if (lastKnownLocation != null)
+                {
+                    // Eger son konum 10 dakikadan daha yeniyse, onu kullan
+                    if (DateTimeOffset.Now - lastKnownLocation.Timestamp < TimeSpan.FromMinutes(10))
+                    {
+                        return lastKnownLocation;
+                    }
+                }
+
+                // 2. Yoksa veya eskiyse yeni konum iste (Yavas olabilir)
+                var request = new GeolocationRequest(GeolocationAccuracy.Best, TimeSpan.FromSeconds(10));
+                return await Geolocation.GetLocationAsync(request);
+            }
+            catch (Exception ex)
+            {
+                // Konum servisi kapali olabilir veya izin verilmemis olabilir
+                System.Diagnostics.Debug.WriteLine($"Location Service Error: {ex.Message}");
+                return null;
+            }
         }
 
 

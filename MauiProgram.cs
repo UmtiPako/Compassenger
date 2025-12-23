@@ -1,4 +1,6 @@
-﻿using Compassenger.Services;
+﻿using Compassenger.Data;
+using Compassenger.Services;
+using Compassenger.Views;
 using Microsoft.Extensions.Logging;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
@@ -26,6 +28,11 @@ namespace Compassenger
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 }); ;
 
+            builder.Services.AddTransient<CompassPage>();
+            builder.Services.AddTransient<MapView>();
+            builder.Services.AddTransient<LocationsView>();
+            builder.Services.AddTransient<Repo>();
+            builder.Services.AddDbContext<AppDbContext>();
             builder.Services.AddSingleton<CompassService>();
             builder.Services.AddSingleton<LocationService>();
 

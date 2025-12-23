@@ -4,7 +4,6 @@
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
              x:Class="Compassenger.Views.MapView"
              Title="HARİTA">
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -35,8 +34,8 @@
                BackgroundColor="White">
             <Grid>
                 <mapsui:MapView x:Name="MV"
-                                   VerticalOptions="FillAndExpand"
-                                   HorizontalOptions="FillAndExpand" />
+                                VerticalOptions="FillAndExpand"
+                                HorizontalOptions="FillAndExpand" />
 
                 <!-- Anlık Pozisyon Butonu -->
                 <Button x:Name="GetLocationButton"
@@ -52,9 +51,73 @@
                         VerticalOptions="Start"
                         Margin="15"
                         Clicked="OnGetLocationClicked" />
+
+                <!-- Pin Bilgi Kartı (Pin eklenince görünür) -->
+                <Frame x:Name="PinInfoCard"
+                       IsVisible="False"
+                       BackgroundColor="White"
+                       Padding="15"
+                       CornerRadius="12"
+                       HasShadow="True"
+                       HorizontalOptions="Center"
+                       VerticalOptions="End"
+                       Margin="20,20,20,80"
+                       WidthRequest="350">
+                    <StackLayout Spacing="12">
+
+                        <!-- Başlık -->
+                        <Label Text="Lokasyon İsmi Girin"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#333"
+                               HorizontalOptions="Center" />
+
+                        <!-- İsim TextBox -->
+                        <Entry x:Name="LocationNameEntry"
+                               Placeholder="Örn: Ev, İş, Okul..."
+                               FontSize="15"
+                               BackgroundColor="#F5F5F5"
+                               TextColor="#333"
+                               PlaceholderColor="#999" />
+
+                        <!-- Butonlar -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+
+                            <Button Grid.Column="0"
+                                    x:Name="SaveButton"
+                                    Text="💾 Kaydet"
+                                    BackgroundColor="#4CAF50"
+                                    TextColor="White"
+                                    FontSize="14"
+                                    FontAttributes="Bold"
+                                    CornerRadius="8"
+                                    Clicked="OnSaveLocationClicked" />
+
+                            <Button Grid.Column="1"
+                                    x:Name="StartButton"
+                                    Text="▶️ Direkt Başla"
+                                    BackgroundColor="#2196F3"
+                                    TextColor="White"
+                                    FontSize="14"
+                                    FontAttributes="Bold"
+                                    CornerRadius="8"
+                                    Clicked="OnStartDirectlyClicked" />
+
+                        </Grid>
+
+                        <!-- İptal Butonu -->
+                        <Button Text="❌ İptal"
+                                BackgroundColor="#F44336"
+                                TextColor="White"
+                                FontSize="13"
+                                CornerRadius="8"
+                                Clicked="OnCancelPinClicked" />
+
+                    </StackLayout>
+                </Frame>
+
             </Grid>
         </Frame>
-    
-    </Grid>
 
+    </Grid>
 </ContentPage>
