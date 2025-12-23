@@ -11,20 +11,32 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Başlık -->
-        <Frame Grid.Row="0" 
-               BackgroundColor="#4CAF50" 
-               Padding="15,10" 
-               Margin="10,10,10,5"
-               CornerRadius="8"
-               HasShadow="True">
-            <Label Text="Kayıtlı Lokasyonlarım"
-                   TextColor="White"
-                   FontSize="16"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center" />
-        </Frame>
+    <!-- Başlık -->
+    <Frame Grid.Row="0" 
+           BackgroundColor="#4CAF50" 
+           Padding="15,10" 
+           Margin="10,10,10,5"
+           CornerRadius="8"
+           HasShadow="True">
+        <Label Text="Kayıtlı Lokasyonlarım"
+               TextColor="White"
+               FontSize="16"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               VerticalOptions="Center" />
+    </Frame>
+
+    <!-- Arama Çubuğu ve Liste -->
+    <Grid Grid.Row="1" RowDefinitions="Auto,*">
+        <SearchBar Grid.Row="0"
+                   Placeholder="Lokasyon ara..."
+                   FontSize="14"
+                   BackgroundColor="White"
+                   CancelButtonColor="#4CAF50"
+                   TextColor="#333"
+                   PlaceholderColor="#999"
+                   Margin="10,0,10,5"
+                   TextChanged="OnSearchBarTextChanged"/>
 
         <!-- Lokasyon Listesi -->
         <RefreshView Grid.Row="1" x:Name="LocationsRefreshView" Refreshing="OnRefreshing">
@@ -130,5 +142,5 @@
         </RefreshView>
 
     </Grid>
-
+    </Grid>
 </ContentPage>

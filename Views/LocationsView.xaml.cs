@@ -8,6 +8,8 @@ public partial class LocationsView : ContentPage
 {
     private readonly Repo _repo;
     private ObservableCollection<Waypoint> _waypointsCollection;
+    // Orijinal listeyi hafizada tutmak icin
+    private List<Waypoint> _allWaypoints = new List<Waypoint>();
     private int _skip = 0;
     private const int _pageSize = 20;
     private bool _isLoading = false;
@@ -28,11 +30,46 @@ public partial class LocationsView : ContentPage
         await ReloadLocationsAsync();
     }
 
+    private async void OnSearchBarTextChanged(object sender, TextChangedEventArgs e)
+    {
+        var searchTerm = e.NewTextValue;
+
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            // Arama temizlendiyse mevcut yuklenmis listeyi geri yukle
+            // Ancak burada pagination yapisi oldugu icin en dogrusu ekrandaki listeyi 
+            // _allWaypoints cache'inden geri getirmektir.
+            // Veya bastan yukletmek:
+            if (_waypointsCollection.Count != _allWaypoints.Count)
+            {
+                _waypointsCollection.Clear();
+                foreach (var item in _allWaypoints)
+                {
+                    _waypointsCollection.Add(item);
+                }
+            }
+        }
+        else
+        {
+            // Arama yap
+            var filteredList = _allWaypoints
+                .Where(w => w.Name != null && w.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            _waypointsCollection.Clear();
+            foreach (var item in filteredList)
+            {
+                _waypointsCollection.Add(item);
+            }
+        }
+    }
+
     private async Task ReloadLocationsAsync()
     {
         _skip = 0;
         _isMoreDataAvailable = true;
         _waypointsCollection.Clear();
+        _allWaypoints.Clear(); // Cache'i de temizle
         await LoadMoreLocationsAsync();
     }
 
@@ -45,9 +82,6 @@ public partial class LocationsView : ContentPage
             _isLoading = true;
             LoadingFooter.IsVisible = true;
 
-            // Yapay bir gecikme ekleyerek yukleniyor animasyonunu gorebiliriz (opsiyonel)
-            // await Task.Delay(500);
-
             var newItems = await _repo.GetWaypointsPagedAsync(_skip, _pageSize);
 
             if (newItems.Count == 0)
@@ -59,6 +93,7 @@ public partial class LocationsView : ContentPage
                 foreach (var item in newItems)
                 {
                     _waypointsCollection.Add(item);
+                    _allWaypoints.Add(item); // Ana listeye de ekle
                 }
 
                 _skip += newItems.Count;
